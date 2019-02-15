@@ -9,4 +9,32 @@ var config = {
   };
   firebase.initializeApp(config);
 
-  export default firebase
+   const loginWithFacebook = async () =>{
+     
+      console.log('LOGIM');
+      
+      const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync(
+        '2240305036240222',
+        { permissions: ['public_profile' , 'email'] }
+      );
+    
+      if (type === 'success') {
+        return new Promise((resolve , reject)=>{
+        // Build Firebase credential with the Facebook access token.
+        const credential = firebase.auth.FacebookAuthProvider.credential(token);
+        // Sign in with credential from the Facebook user.
+          firebase.auth().signInAndRetrieveDataWithCredential(credential).then((success)=>{
+            console.log("SUCCESS" , success);
+            resolve(success)
+          })
+          .catch((error) => {
+            console.log("ERROR" , error);
+            
+            // Handle Errors here.
+          });
+        })
+      }
+
+  }
+
+  export {loginWithFacebook}

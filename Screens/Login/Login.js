@@ -11,11 +11,13 @@ export default class Login extends React.Component {
     }
 
   render() {
+    console.log(this.props);
+    
     return (
       <View style={styles.container}>
         <Text style={styles.text}>SMIT-FYP</Text>
         <TouchableOpacity
-            onPress={()=>{loginWithFacebook().then((user)=>{console.log("LOGEED IN" , user);
+            onPress={()=>{loginWithFacebook().then((user)=>{this.props.navigation.push('HomeScreen')
             })}}
             style={styles.button}
         >

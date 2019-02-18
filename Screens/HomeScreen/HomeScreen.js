@@ -3,12 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import {firebase} from  '../../Config/Firebase/Firebase'
 
 export default class HomeScreen extends React.Component {
-  render() {
-    const userUid = firebase.auth().currentUser.uid;
-    console.log('USER-UID' ,  userUid);
-    
-      console.log(this.props);
-      
+  render() {    
     return (
       <View style={styles.container}>
         <Text>HomeScreen</Text>

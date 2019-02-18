@@ -23,9 +23,12 @@ const loginWithFacebook = async () => {
       // Build Firebase credential with the Facebook access token.
       const credential = firebase.auth.FacebookAuthProvider.credential(token);
       // Sign in with credential from the Facebook user.
-      firebase.auth().signInAndRetrieveDataWithCredential(credential).then((success) => {
-        console.log("SUCCESS", success);
-        resolve(success)
+      firebase.auth().signInAndRetrieveDataWithCredential(credential).then((user) => {
+        const userObj = {
+          userName : user.user.displayName,
+          userUid : user.user.uid
+        }
+        resolve(userObj)
       })
         .catch((error) => {
           console.log("ERROR", error);

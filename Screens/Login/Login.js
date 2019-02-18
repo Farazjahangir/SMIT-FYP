@@ -1,8 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import {loginWithFacebook} from '../../Config/Firebase/Firebase'
+import userLogin from '../../redux/Actions/authActions'
+import { connect } from 'react-redux'
 
-export default class Login extends React.Component {
+class Login extends React.Component {
 
 
 
@@ -11,13 +13,13 @@ export default class Login extends React.Component {
     }
 
   render() {
-    console.log(this.props);
-    
     return (
       <View style={styles.container}>
         <Text style={styles.text}>SMIT-FYP</Text>
         <TouchableOpacity
-            onPress={()=>{loginWithFacebook().then((user)=>{this.props.navigation.push('HomeScreen')
+            onPress={()=>{loginWithFacebook().then((user)=>{
+              userLogin(user)
+              this.props.navigation.push('HomeScreen')
             })}}
             style={styles.button}
         >
@@ -27,6 +29,20 @@ export default class Login extends React.Component {
     );
   }
 }
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    userLogin: (userUid) => dispatch(gettingMeetings(userUid))
+  }
+  
+}
+const mapStateToProps = (state) => {
+  return {
+
+  }
+  }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login)
 
 const styles = StyleSheet.create({
   container: {

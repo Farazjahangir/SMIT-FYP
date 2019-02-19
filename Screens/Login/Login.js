@@ -18,8 +18,8 @@ class Login extends React.Component {
         <Text style={styles.text}>SMIT-FYP</Text>
         <TouchableOpacity
             onPress={()=>{loginWithFacebook().then((user)=>{
-              userLogin(user)
-              this.props.navigation.push('HomeScreen')
+              this.props.userLogin(user)
+              this.props.navigation.push('SavingProfile')
             })}}
             style={styles.button}
         >
@@ -32,13 +32,14 @@ class Login extends React.Component {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    userLogin: (userUid) => dispatch(gettingMeetings(userUid))
+    userLogin: (userUid) => dispatch(userLogin(userUid))
   }
   
 }
 const mapStateToProps = (state) => {
+  console.log('MApState' , state);
+  
   return {
-
   }
   }
 

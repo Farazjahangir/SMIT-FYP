@@ -5,9 +5,6 @@ import userLogin from '../../redux/Actions/authActions'
 import { connect } from 'react-redux'
 
 class Login extends React.Component {
-
-
-
     static navigationOptions = {
         header: null
     }

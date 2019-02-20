@@ -26,7 +26,8 @@ const loginWithFacebook = async () => {
       firebase.auth().signInAndRetrieveDataWithCredential(credential).then((user) => {
         const userObj = {
           userName : user.user.displayName,
-          userUid : user.user.uid
+          userUid : user.user.uid,
+          profilePic : user.user.photoURL
         }
         resolve(userObj)
       })

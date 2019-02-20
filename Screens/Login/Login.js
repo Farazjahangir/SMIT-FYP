@@ -15,8 +15,10 @@ class Login extends React.Component {
         <Text style={styles.text}>SMIT-FYP</Text>
         <TouchableOpacity
             onPress={()=>{loginWithFacebook().then((user)=>{
+              console.log(user);
+              
               this.props.userLogin(user)
-              this.props.navigation.push('SavingProfile')
+              // this.props.navigation.push('SavingProfile')
             })}}
             style={styles.button}
         >

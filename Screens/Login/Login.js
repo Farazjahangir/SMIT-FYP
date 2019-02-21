@@ -18,7 +18,7 @@ class Login extends React.Component {
               console.log(user);
               
               this.props.userLogin(user)
-              // this.props.navigation.push('SavingProfile')
+              this.props.navigation.push('SavingProfile')
             })}}
             style={styles.button}
         >

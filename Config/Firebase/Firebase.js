@@ -27,7 +27,7 @@ const loginWithFacebook = async () => {
         const userObj = {
           userName : user.user.displayName,
           userUid : user.user.uid,
-          profilePic : user.user.photoURL
+          profilePic : user.user.photoURL + '?type=large'
         }
         resolve(userObj)
       })

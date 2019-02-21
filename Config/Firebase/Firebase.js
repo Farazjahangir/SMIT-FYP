@@ -1,4 +1,5 @@
 import * as firebase from 'firebase';
+require("firebase/firestore");
 var config = {
   apiKey: "AIzaSyA1a6vHSlGgMbH4aB8feCpKxadatGX-uqM",
   authDomain: "smit-fyp.firebaseapp.com",
@@ -9,6 +10,7 @@ var config = {
 };
 firebase.initializeApp(config);
 
+const db = firebase.firestore();
 const loginWithFacebook = async () => {
 
   console.log('LOGIM');
@@ -41,7 +43,24 @@ const loginWithFacebook = async () => {
 
 }
 
+const savingUserData = (userObj) =>{
+  const uid = userObj.userUid
+  return new Promise((resolve , reject)=>{
+    db.collection('users').doc(uid).set({
+        userName : userObj.userName,
+        profilePic : userObj.profilePic,
+        contactNum : userObj.contactNum,
+        userUid : userObj.userUid
+      })
+      .then(()=>{
+        resolve('Data Saved To Firebase')
+      })
+  })
+  
+}
+
 export {
   firebase,
-  loginWithFacebook
+  loginWithFacebook,
+  savingUserData
 }

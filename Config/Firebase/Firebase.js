@@ -59,8 +59,25 @@ const savingUserData = (userObj) =>{
   
 }
 
+const saveUserSkill = (userSkillObj)=>{
+  const userUid = firebase.auth().currentUser.uid;
+  return new Promise((resolve ,reject)=>{
+    db.collection('Skills').doc(userUid).set({
+      SkillName : userSkillObj.skillName,
+      Description : userSkillObj.description,
+      Rate : userSkillObj.rate
+    })
+    .then(()=>{
+      resolve("Data Has Been Saved")
+  })
+  })
+  
+  
+}
+
 export {
   firebase,
   loginWithFacebook,
-  savingUserData
+  savingUserData,
+  saveUserSkill
 }

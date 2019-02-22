@@ -2,6 +2,7 @@ import { createStackNavigator, createAppContainer } from "react-navigation";
 import Login from '../../Screens/Login/Login'
 import SavingProfile from '../../Screens/SavingProfile/SavingProfile'
 import Dashboard from '../../Screens/Dashboard/Dashboard'
+import SubmitSkills from '../../Screens/SubmitSkills/SubmitSkills'
 const AppNavigator = createStackNavigator({
     // Login: {
     //     screen: Login
@@ -9,8 +10,11 @@ const AppNavigator = createStackNavigator({
     // SavingProfile: {
     //     screen: SavingProfile
     // },
-    Dashboard : {
-        screen : Dashboard
+    // Dashboard : {
+    //     screen : Dashboard
+    // },
+    SubmitSkills : {
+        screen : SubmitSkills
     }
 });
 

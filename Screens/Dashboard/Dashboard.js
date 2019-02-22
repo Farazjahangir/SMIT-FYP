@@ -13,10 +13,9 @@ class Dashboard extends React.Component {
         return {
           headerTitle:"Dashboard",
           headerRight: (
-            <Button
-              onPress={navigation.getParam('openSideMenu')}
-              title="Menu"
-            />
+            <TouchableOpacity style={{backgroundColor : 'blue' , padding: 10}} onPress={navigation.getParam('openSideMenu')}>
+                <Text>Menu</Text>
+            </TouchableOpacity>
           ),
         };
       };

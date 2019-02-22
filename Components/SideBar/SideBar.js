@@ -12,6 +12,9 @@ class SideBar extends React.Component{
                 <TouchableOpacity onPress={()=>{this.props.navigation.push('Dashboard')}}>
                     <Text style={styles.fontSize}>Dashboard</Text>
                 </TouchableOpacity>
+                <TouchableOpacity onPress={()=>{this.props.navigation.push('SubmitSkills')}}>
+                    <Text style={styles.fontSize}>Submit Your Skill</Text>
+                </TouchableOpacity>
             </View>
         )
     }

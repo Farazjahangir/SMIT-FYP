@@ -21,7 +21,7 @@ const loginWithFacebook = async () => {
   );
 
   if (type === 'success') {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {  
       // Build Firebase credential with the Facebook access token.
       const credential = firebase.auth.FacebookAuthProvider.credential(token);
       // Sign in with credential from the Facebook user.
@@ -71,13 +71,23 @@ const saveUserSkill = (userSkillObj)=>{
       resolve("Data Has Been Saved")
   })
   })
-  
-  
+}
+
+const checkingUserProfile = () =>{
+  const userUid = firebase.auth().currentUser.uid;
+  return new Promise((resolve , reject)=>{
+    db.collection('users').doc(userUid).get()
+      .then((doc)=>{
+        resolve(doc)
+      })
+
+  })
 }
 
 export {
   firebase,
   loginWithFacebook,
   savingUserData,
-  saveUserSkill
+  saveUserSkill,
+  checkingUserProfile
 }

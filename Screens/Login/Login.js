@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import {loginWithFacebook} from '../../Config/Firebase/Firebase'
+import { loginWithFacebook , checkingUserProfile } from '../../Config/Firebase/Firebase'
 import userLogin from '../../redux/Actions/authActions'
 import { connect } from 'react-redux'
 
@@ -9,17 +9,29 @@ class Login extends React.Component {
         header: null
     }
 
+    login(){
+      loginWithFacebook().then((user)=>{
+        this.props.userLogin(user)
+        checkingUserProfile().then((doc)=>{
+          if(doc.exists){
+            console.log("IF" , doc.exist);
+            
+            this.props.navigation.replace('Dashboard')
+          }
+          else{
+            console.log("Else" , doc);
+            this.props.navigation.replace('SavingProfile')
+          }
+        })
+      })
+    }
+
   render() {
     return (
       <View style={styles.container}>
         <Text style={styles.text}>SMIT-FYP</Text>
         <TouchableOpacity
-            onPress={()=>{loginWithFacebook().then((user)=>{
-              console.log(user);
-              
-              this.props.userLogin(user)
-              this.props.navigation.push('SavingProfile')
-            })}}
+            onPress={()=>{this.login()}}
             style={styles.button}
         >
         <Text style={styles.buttonText}>Login With Facebook</Text>

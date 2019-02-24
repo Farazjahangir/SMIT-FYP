@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native'
-import SideBar from '../../Components/SideBar/SideBar'
 import { saveUserSkill } from '../../Config/Firebase/Firebase'
 class SubmitSkills extends Component {
     constructor(){

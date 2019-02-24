@@ -13,35 +13,27 @@ firebase.initializeApp(config);
 const db = firebase.firestore();
 const loginWithFacebook = async () => {
 
-  console.log('LOGIM');
-
   const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync(
     '2240305036240222',
     { permissions: ['public_profile', 'email'] }
   );
 
   if (type === 'success') {
-    return new Promise((resolve, reject) => {  
-      // Build Firebase credential with the Facebook access token.
-      const credential = firebase.auth.FacebookAuthProvider.credential(token);
-      // Sign in with credential from the Facebook user.
-      firebase.auth().signInAndRetrieveDataWithCredential(credential).then((user) => {
-        const userObj = {
-          userName : user.user.displayName,
-          userUid : user.user.uid,
-          profilePic : user.user.photoURL + '?type=large'
-        }
-        resolve(userObj)
-      })
-        .catch((error) => {
-          console.log("ERROR", error);
+    const credential = await firebase.auth.FacebookAuthProvider.credential(token)
 
-          // Handle Errors here.
-        });
-    })
+    const user = await firebase.auth().signInAndRetrieveDataWithCredential(credential)
+      const userObj = {
+        userName: user.user.displayName,
+        userUid: user.user.uid,
+        profilePic: user.user.photoURL + '?type=large'
+      }
+      return userObj
   }
-
+  else{
+    throw 'Login error'
+  }
 }
+
 
 const savingUserData = (userObj) =>{
   const uid = userObj.userUid
@@ -73,15 +65,15 @@ const saveUserSkill = (userSkillObj)=>{
   })
 }
 
-const checkingUserProfile = () =>{
-  const userUid = firebase.auth().currentUser.uid;
-  return new Promise((resolve , reject)=>{
-    db.collection('users').doc(userUid).get()
-      .then((doc)=>{
-        resolve(doc)
-      })
-
-  })
+const checkingUserProfile = async () =>{
+  try{
+      const userUid =  firebase.auth().currentUser.uid;
+      const userData = await db.collection('users').doc(userUid).get()
+      return userData
+  }
+  catch(e){
+    throw 'not found'
+  }
 }
 
 export {

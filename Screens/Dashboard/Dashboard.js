@@ -1,6 +1,5 @@
 import React from 'react';
 import { StyleSheet,Button , ScrollView, FlatList, Text, View, Image, TouchableOpacity, TextInput } from 'react-native';
-import SideBar from '../../Components/SideBar/SideBar'
 class Dashboard extends React.Component {   
     constructor(){
         super()
@@ -9,32 +8,10 @@ class Dashboard extends React.Component {
         }
     }
 
-    static navigationOptions = ({ navigation }) => {
-        return {
-          headerTitle:"Dashboard",
-          headerRight: (
-            <TouchableOpacity style={{backgroundColor : 'blue' , padding: 10}} onPress={navigation.getParam('openSideMenu')}>
-                <Text>Menu</Text>
-            </TouchableOpacity>
-          ),
-        };
+    static navigationOptions = {
+        title: 'Dashboard',
       };
-
     
-    componentDidMount(){
-        this.props.navigation.setParams({ openSideMenu : this.openSideMenu });
-      }
-      openSideMenu = ()=>{
-        const showSideBar =  this.state.showSideBar
-        if(showSideBar){
-            this.setState({showSideBar : false})
-        }
-        else{
-            this.setState({showSideBar : true})
-        }
-       console.log("SIDE BAr" , showSideBar);
-       
-      }
     render(){
        const { showSideBar } = this.state
        console.log("PROPS" , this.props);

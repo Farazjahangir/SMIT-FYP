@@ -1,58 +1,61 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import { loginWithFacebook , checkingUserProfile } from '../../Config/Firebase/Firebase'
+import { loginWithFacebook, checkingUserProfile } from '../../Config/Firebase/Firebase'
 import userLogin from '../../redux/Actions/authActions'
 import { connect } from 'react-redux'
 
 class Login extends React.Component {
-    static navigationOptions = {
-        header: null
-    }
-
-    login(){
-      loginWithFacebook().then((user)=>{
-        this.props.userLogin(user)
-        checkingUserProfile().then((doc)=>{
-          if(doc.exists){
-            console.log("IF" , doc.exist);
-            
-            this.props.navigation.replace('Dashboard')
-          }
-          else{
-            console.log("Else" , doc);
-            this.props.navigation.replace('SavingProfile')
-          }
-        })
-      })
-    }
-
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.text}>SMIT-FYP</Text>
-        <TouchableOpacity
-            onPress={()=>{this.login()}}
-            style={styles.button}
-        >
-        <Text style={styles.buttonText}>Login With Facebook</Text>
-        </TouchableOpacity>
-      </View>
-    );
+  static navigationOptions = {
+    header: null
   }
+
+  async login() {
+    try {
+      console.log('TRY');
+      const userData = await loginWithFacebook()
+      const checkingUser = await checkingUserProfile()
+      if (checkingUser.exists) {
+        console.log('checkingUser.exists' , checkingUser.exists);  
+        this.props.navigation.replace('Dashboard')
+      }
+      else {
+        console.log("checkingUser.exists", checkingUser.exists);
+        this.props.navigation.replace('SavingProfile')
+      }
+      this.props.userLogin(userData)
+    }
+    catch (e) {
+      console.log('catch', e);
+    }
+  }
+
+render() {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.text}>SMIT-FYP</Text>
+      <TouchableOpacity
+        onPress={() => { this.login() }}
+        style={styles.button}
+      >
+        <Text style={styles.buttonText}>Login With Facebook</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     userLogin: (userUid) => dispatch(userLogin(userUid))
   }
-  
+
 }
 const mapStateToProps = (state) => {
-  console.log('MApState' , state);
-  
+  console.log('MApState', state);
+
   return {
   }
-  }
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login)
 
@@ -63,18 +66,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     // backgroundColor : '#273c75'
   },
-  text : {
-
-      fontSize : 30,
-      marginBottom : 12
+  text: {
+    fontSize: 40,
+    marginBottom: 20,
+    fontFamily: 'FredokaOne-Regular',
+    // fontWeight : '600',
   },
   button: {
+    borderWidth: 2,
+    borderColor: '#341f97',
+    width: '70%',
+    borderRadius: 100,
     alignItems: 'center',
-    backgroundColor: '#4267b2',
     padding: 15
   },
-  buttonText : {
-      color : '#fff',
-      fontSize : 20
+  buttonText: {
+    fontWeight: '900',
+    color: '#341f97',
+    fontSize: 20
   }
 });

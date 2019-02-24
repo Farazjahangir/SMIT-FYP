@@ -17,9 +17,9 @@ const DrawerNavigator = createDrawerNavigator({
 });
 
 const AppNavigator = createStackNavigator({
-    // Login: {
-    //     screen: Login
-    // },
+    Login: {
+        screen: Login
+    },
     SavingProfile: {
         screen: SavingProfile
     },

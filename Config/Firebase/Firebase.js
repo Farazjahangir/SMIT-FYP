@@ -11,8 +11,9 @@ var config = {
 firebase.initializeApp(config);
 
 const db = firebase.firestore();
-const loginWithFacebook = async () => {
+const storageRef = firebase.storage().ref()
 
+const loginWithFacebook = async () => {
   const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync(
     '2240305036240222',
     { permissions: ['public_profile', 'email'] }
@@ -20,7 +21,6 @@ const loginWithFacebook = async () => {
 
   if (type === 'success') {
     const credential = await firebase.auth.FacebookAuthProvider.credential(token)
-
     const user = await firebase.auth().signInAndRetrieveDataWithCredential(credential)
       const userObj = {
         userName: user.user.displayName,
@@ -35,20 +35,29 @@ const loginWithFacebook = async () => {
 }
 
 
-const savingUserData = (userObj) =>{
+const SavingUserData = async (userObj) =>{
   const uid = userObj.userUid
-  return new Promise((resolve , reject)=>{
-    db.collection('users').doc(uid).set({
+  // let profilePic = ''
+  console.log('UserObject' , userObj.profilePicUrl);
+
+  if(typeof userObj.profilePicUrl === 'object'){
+    console.log('FirebaseIf' , userObj.profilePicUrl);
+    
+    let name = `${Date.now()} - ${uid}`
+    let message = userObj.profilePicUrl
+    await storageRef.child(name).put(message)
+    const url = await storageRef.child(name).getDownloadURL();
+    userObj.profilePicUrl = url
+  //  console.log('ProfilePioc' , profilePicUrl);
+  }
+
+    const userDataUploaded =  await db.collection('users').doc(uid).set({
         userName : userObj.userName,
-        profilePic : userObj.profilePic,
+        profilePicUrl : userObj.profilePicUrl,
         contactNum : userObj.contactNum,
         userUid : userObj.userUid
-      })
-      .then(()=>{
-        resolve('Data Saved To Firebase')
-      })
-  })
-  
+      })  
+      return userDataUploaded
 }
 
 const saveUserSkill = (userSkillObj)=>{
@@ -79,7 +88,7 @@ const checkingUserProfile = async () =>{
 export {
   firebase,
   loginWithFacebook,
-  savingUserData,
+  SavingUserData,
   saveUserSkill,
   checkingUserProfile
 }

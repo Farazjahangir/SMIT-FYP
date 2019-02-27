@@ -5,6 +5,7 @@ import userLogin from '../../redux/Actions/authActions'
 import { connect } from 'react-redux'
 
 class Login extends React.Component {
+
   static navigationOptions = {
     header: null
   }
@@ -13,23 +14,22 @@ class Login extends React.Component {
     try {
       console.log('TRY');
       const userData = await loginWithFacebook()
+      this.props.userLogin(userData)
+      
       const checkingUser = await checkingUserProfile()
-      if (checkingUser.exists) {
-        console.log('checkingUser.exists' , checkingUser.exists);  
-        this.props.navigation.replace('Dashboard')
+      if (checkingUser.exists) {        
+         this.props.navigation.replace('Dashboard')
       }
       else {
-        console.log("checkingUser.exists", checkingUser.exists);
-        this.props.navigation.replace('SavingProfile')
+         this.props.navigation.replace('SavingProfile')
       }
-      this.props.userLogin(userData)
     }
     catch (e) {
       console.log('catch', e);
     }
   }
 
-render() {
+  render() {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>SMIT-FYP</Text>
@@ -46,15 +46,12 @@ render() {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    userLogin: (userUid) => dispatch(userLogin(userUid))
+    userLogin: (userData) => dispatch(userLogin(userData))
   }
 
 }
 const mapStateToProps = (state) => {
-  console.log('MApState', state);
-
-  return {
-  }
+  return {}
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login)

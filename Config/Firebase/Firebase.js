@@ -60,18 +60,28 @@ const SavingUserData = async (userObj) =>{
       return userDataUploaded
 }
 
-const saveUserSkill = (userSkillObj)=>{
-  const userUid = firebase.auth().currentUser.uid;
-  return new Promise((resolve ,reject)=>{
-    db.collection('Skills').doc(userUid).set({
-      SkillName : userSkillObj.skillName,
+const saveUserSkill = async (userSkillObj)=>{
+  console.log('USerSKills' , userSkillObj);
+   const userUid = firebase.auth().currentUser.uid;
+
+   if(typeof userSkillObj.picUrl._data === 'object'){
+     
+    let name = `${Date.now()} - ${userUid}`
+    let message = userSkillObj.picUrl
+    await storageRef.child(name).put(message)
+    const url = await storageRef.child(name).getDownloadURL();
+    userSkillObj.picUrl = url
+    console.log('userSkillObj.picUrl' , userSkillObj.picUrl);
+    
+  }
+
+    await db.collection('Skills').doc(userUid).set({
+      SkillName : userSkillObj.selectedCateogory,
       Description : userSkillObj.description,
-      Rate : userSkillObj.rate
+      Rate : userSkillObj.rate,
+      picUrl : userSkillObj.picUrl
     })
-    .then(()=>{
-      resolve("Data Has Been Saved")
-  })
-  })
+    return "Success"
 }
 
 const checkingUserProfile = async () =>{
@@ -84,11 +94,11 @@ const checkingUserProfile = async () =>{
     throw 'not found'
   }
 }
-
+    
 export {
   firebase,
   loginWithFacebook,
   SavingUserData,
   saveUserSkill,
-  checkingUserProfile
+  checkingUserProfile,
 }

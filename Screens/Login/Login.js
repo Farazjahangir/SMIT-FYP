@@ -10,14 +10,24 @@ class Login extends React.Component {
     header: null
   }
 
+  componentDidMount(){
+    if(this.props.isLogin){
+      this.props.navigation.replace('Dashboard')
+    }
+    
+  }
+
   async login() {
     try {
       console.log('TRY');
       const userData = await loginWithFacebook()
       this.props.userLogin(userData)
       
-      const checkingUser = await checkingUserProfile()
-      if (checkingUser.exists) {        
+      let checkingUser = await checkingUserProfile()
+      if (checkingUser.exists) {       
+        checkingUser =  checkingUser.data()
+        checkingUser.isLogin = true
+        this.props.userLogin(checkingUser)
          this.props.navigation.replace('Dashboard')
       }
       else {
@@ -28,7 +38,6 @@ class Login extends React.Component {
       console.log('catch', e);
     }
   }
-
   render() {
   return (
     <View style={styles.container}>
@@ -51,7 +60,11 @@ const mapDispatchToProps = (dispatch) => {
 
 }
 const mapStateToProps = (state) => {
-  return {}
+  console.log('MApState' , state.authReducer.user);
+  
+  return {
+    isLogin : state.authReducer.user.isLogin
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login)

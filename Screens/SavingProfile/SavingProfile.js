@@ -7,6 +7,7 @@ import { Form, Item, Input, Label } from 'native-base';
 import { SavingUserData }  from '../../Config/Firebase/Firebase'
 import { makeBlobFromURI } from '../../helper'
 import Button from '../../Components/Button/Button'
+import userLogin from '../../redux/Actions/authActions'
 
 class SavingProfile extends React.Component {
   constructor() {
@@ -29,8 +30,6 @@ class SavingProfile extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.props);
-
     this.setState({ userName: this.props.userName, profilePicUrl: this.props.profilePicUrl, userUid: this.props.userUid })
   }
 
@@ -73,8 +72,9 @@ class SavingProfile extends React.Component {
       userUid,
       blob
     }
-    const dataUploaded = await SavingUserData(userObj)
-    console.log('Data=====>' , dataUploaded);
+    const userData = await SavingUserData(userObj)
+    this.props.userLogin(userData)
+    
   }
 
   render() {
@@ -112,7 +112,9 @@ class SavingProfile extends React.Component {
 }
 
 const mapDispatchToProps = (dispatch) => {
-  return {}
+    return {
+      userLogin: (userData) => dispatch(userLogin(userData))
+    }
 
 }
 const mapStateToProps = (state) => {

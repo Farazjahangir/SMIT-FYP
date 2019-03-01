@@ -57,7 +57,8 @@ const SavingUserData = async (userObj) =>{
         contactNum : userObj.contactNum,
         userUid : userObj.userUid
       })  
-      return userDataUploaded
+      userObj.isLogin = true
+      return userObj
 }
 
 const saveUserSkill = async (userSkillObj)=>{
@@ -78,8 +79,9 @@ const saveUserSkill = async (userSkillObj)=>{
       Description : userSkillObj.description,
       Rate : userSkillObj.rate,
       picUrl : userSkillObj.picUrl,
+      userUid : userUid
     })
-    return "Success"
+    return 'success'
 }
 
 const checkingUserProfile = async () =>{

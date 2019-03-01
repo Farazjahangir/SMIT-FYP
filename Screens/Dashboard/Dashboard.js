@@ -1,6 +1,8 @@
 import React from 'react';
+import { connect } from 'react-redux'
+
 import { StyleSheet, ScrollView, FlatList, View, Image, TouchableOpacity, TextInput } from 'react-native';
-import { Container, Header, Content, List, ListItem, Left, Body, Right, Thumbnail, Text } from 'native-base';
+import { Content, List, ListItem, Left, Body, Right, Thumbnail, Text, Spinner } from 'native-base';
 import Button  from '../../Components/Button/Button'
 import { firebase } from '../../Config/Firebase/Firebase'
 class Dashboard extends React.Component {   
@@ -10,6 +12,7 @@ class Dashboard extends React.Component {
             showSideBar : false,
             skillsArr :[],
             list : false,
+            isLoading : true
         }
     }
 
@@ -18,42 +21,43 @@ class Dashboard extends React.Component {
     // };
    
     componentDidMount(){
-        console.log('Componrnt');
+        console.log('Componrnt' , this.props);
         
         let { skillsArr } = this.state
         let skillsList;
           const db = firebase.firestore()
           db.collection("Skills")
           .onSnapshot((snapshot)=> {
-              snapshot.docChanges().forEach((change)=> {
-                  if (change.type === "added") {
-                      console.log('Added' , change.doc.data() );
-                      
-                        skillsList = change.doc.data()
-                  }
-                  if (change.type === "modified") {
-                      console.log("Modified city: ", change.doc.data());
-                      skillsList = change.doc.data()
-                  }
-                  if (change.type === "removed") {
-                      console.log("Removed city: ", change.doc.data());
-                      skillsList = change.doc.data()
-                  }
-                  skillsArr.push(skillsList)
-                  this.setState({skillsArr :skillsArr , list : true})
-              });
+                  snapshot.docChanges().forEach((change)=> {
+                      if (change.type === "added") {
+                            skillsList = change.doc.data()
+                      }
+                      if (change.type === "modified") {
+                          skillsList = change.doc.data()
+                      }
+                      if (change.type === "removed") {
+                          skillsList = change.doc.data()
+                      }
+                      skillsArr.push(skillsList)
+                      this.setState({skillsArr :skillsArr , list : true , isLoading : false})
+                  });
           });  
-  
+      }
+
+      componentWillReceiveProps(nextProps){
+          console.log('componentWillReceiveProps' , nextProps);
+          
       }
     
     render(){
-       const { showSideBar, skillsArr, list } = this.state
+       const { showSideBar, skillsArr, list, isLoading } = this.state
     //    console.log('State' , this.state.skillsArr);
        
         return(
-            <View>
+            <View style={{flex : 1}}>
+                {isLoading &&  <Spinner color = 'blue' style={{flex : 1 , justifyContent : 'center'}}  /> }
                 <ScrollView vertical={true}  contentContainerStyle={styles.contentContainer}>
-                        {list && 
+                        {list &&
                             skillsArr.map((val , i)=>{
                                 return<Content key={Date.now() + i} style={{marginTop : 20}}>
                                         <List >
@@ -96,7 +100,20 @@ class Dashboard extends React.Component {
     }
 }
 
-export default Dashboard
+const mapDispatchToProps = (dispatch) => {
+    return {}
+
+}
+const mapStateToProps = (state) => {
+
+  return {
+    userName: state.authReducer.user.userName,
+    profilePicUrl : state.authReducer.user.profilePic,
+    userUid : state.authReducer.user.userUid
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard)
 
 const styles = StyleSheet.create({
     contentContainer: {

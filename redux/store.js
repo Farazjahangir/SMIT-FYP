@@ -1,10 +1,42 @@
-import { createStore , applyMiddleware } from 'redux';
 import rootReducer from './rootReducer';
-import thunk from 'redux-thunk';
+import { createStore, applyMiddleware, compose } from 'redux'
+import { persistStore, persistReducer } from 'redux-persist'
+import thunk from 'redux-thunk'
+import { AsyncStorage } from 'react-native'
+import promise from 'redux-promise-middleware'
+import autoMergeLevel1 from 'redux-persist/lib/stateReconciler/autoMergeLevel1';
 
-const store = createStore(rootReducer, applyMiddleware(thunk));
+const enhancer = compose(
+    applyMiddleware(thunk, promise())
+);
 
-export default store;
+const persistConfig = {
+    key: 'root',
+    storage: AsyncStorage,
+    stateReconciler: autoMergeLevel1,
+    timeout: null
+};
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+export let store = createStore(persistedReducer, enhancer);
+
+store.subscribe(() =>
+    console.log(store.getState())
+);
+
+export const persistor = persistStore(store);
+
+
+
+
+// import { createStore , applyMiddleware } from 'redux';
+// import rootReducer from './rootReducer';
+// import thunk from 'redux-thunk';
+
+// const store = createStore(rootReducer, applyMiddleware(thunk));
+
+// export default store;
 
 
 // import rootReducer from './rootReducer'

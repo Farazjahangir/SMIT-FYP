@@ -27,6 +27,8 @@ const loginWithFacebook = async () => {
         userUid: user.user.uid,
         profilePic: user.user.photoURL + '?type=large'
       }
+      console.log('Firebase' , userObj);
+      
       return userObj
   }
   else{

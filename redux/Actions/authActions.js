@@ -6,5 +6,16 @@ const loginUser = (user) =>{
         user
     }
 } 
+const logoutUser = () =>{
+    console.log('LogoutACtion');
+    
+    return { 
+        type : "LOGOUT_USER",
+    }
+} 
 
-export default loginUser
+
+export{
+    loginUser,
+    logoutUser
+}

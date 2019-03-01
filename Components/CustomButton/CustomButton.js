@@ -1,12 +1,12 @@
 import React from 'react';
 import { Text, TouchableOpacity } from 'react-native';
 
-const Button = (props)=>{    
+const CustomButton = (props)=>{    
     return(
         <TouchableOpacity style={props.style[0]} onPress={props.onPress}>
-            <Text  style={props.style[1]}>{props.children}</Text>
+            <Text  style={props.style[1]}>{props.title}</Text>
         </TouchableOpacity>
     )
 }
 
-export default Button
+export default CustomButton

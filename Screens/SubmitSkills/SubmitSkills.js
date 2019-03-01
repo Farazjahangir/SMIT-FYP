@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image } from 'react-native'
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ScrollView } from 'react-native'
 import { Container, Header, Content, Form, Item, Input, Label, Picker, Textarea  } from 'native-base';
 import { ImagePicker  } from 'expo';
-import Button from '../../Components/Button/Button'
+import CustomButton from '../../Components/CustomButton/CustomButton'
 import { saveUserSkill , getCateogriesFromDb } from '../../Config/Firebase/Firebase'
 import { firebase } from '../../Config/Firebase/Firebase'
 import { makeBlobFromURI } from '../../helper'
+import CustomHeader from '../../Components/CustomHeader/CustomHeader'
 
 class SubmitSkills extends Component {
     constructor() {
@@ -95,17 +96,19 @@ class SubmitSkills extends Component {
     render() {
         const { showSideBar, selectedCateogory, cateogriesList, list, picUrl } = this.state
         return (
+            <View>
+            <CustomHeader title={'Submit Skill'} />
+            <ScrollView vertical={true} contentContainerStyle={styles.contentContainer}>
             <View style={styles.container}>
                 <Image
                     source={picUrl ?{uri :  picUrl} : require('../../images/download.png')}
                     style={styles.skillImg}
                 />
-                <Button 
-                style={[styles.picUploadBtn , styles.picUploadBtnText]}
-                onPress = {()=>{this.pickImage()}}
-                >
-                    Upload Picture
-                </Button>
+                <CustomButton 
+                    title={'Upload Picture'}
+                    style={[styles.picUploadBtn , styles.picUploadBtnText]}
+                    onPress = {()=>{this.pickImage()}}
+                />
                 <Form>
                     <Item picker  style={{ width: '80%' }}>
                         <Picker
@@ -131,15 +134,18 @@ class SubmitSkills extends Component {
                             placeholder="Description (max character 300)" 
                             style={{marginTop : 15}} 
                             maxLength={300} 
+                            multiline = {true}
                             onChange = {(e)=>{this.setState({description : e.nativeEvent.text})}}
                         />
                 </Form>
 
-                <Button 
+                <CustomButton 
+                    title={'Submit'}
                     style={[styles.submitBtn , styles.submitBtnText]}
-                    onPress = {()=>{this.submitSkill()}}>
-                    Submit
-                </Button>
+                    onPress = {()=>{this.submitSkill()}}
+                />
+            </View>
+            </ScrollView>
             </View>
         )
     }
@@ -168,49 +174,51 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         fontSize: 20
     },
-    submitBtn: {
-        borderWidth: 1,
-        borderColor: 'blue',
-        backgroundColor: 'blue',
-        borderRadius: 10,
-        marginTop: 20,
-        width: 120,
-        alignItems: 'center'
-    },
-    submitBtnText: {
-        color: '#fff',
-        padding: 10,
-        fontSize: 19,
-    },
+    // submitBtn: {
+    //     borderWidth: 1,
+    //     borderColor: 'blue',
+    //     backgroundColor: 'blue',
+    //     borderRadius: 10,
+    //     marginTop: 20,
+    //     width: 120,
+    //     alignItems: 'center'
+    // },
+    // submitBtnText: {
+    //     color: '#fff',
+    //     padding: 6,
+    //     fontSize: 14,
+    // },
     skillImg : {
-        width : 200,
-        height : 200
+        width : 180,
+        height : 180,
+        marginTop : 30,
     },
     picUploadBtn : {
         backgroundColor : '#0984e3',
         borderWidth : 2,
         borderColor : '#0984e3',
         borderRadius : 10,
-        padding : 10,
         marginTop : 10
     },
     picUploadBtnText : {
         color : '#fff',
-        fontSize : 18
+        padding : 7,
+        fontSize : 14
     },
     submitBtn : {
         backgroundColor : '#0984e3',
         borderWidth : 2,
         borderColor : '#0984e3',
         borderRadius : 10,
-        padding : 10,
         marginTop : 10,
+        marginBottom : 100,
         width : 150,
         alignItems : 'center'
     },
     submitBtnText : {
+        padding : 7,
         color : '#fff',
-        fontSize : 18
+        fontSize : 14
     }
 });
 

@@ -6,8 +6,8 @@ import { ImagePicker  } from 'expo';
 import { Form, Item, Input, Label } from 'native-base';
 import { SavingUserData }  from '../../Config/Firebase/Firebase'
 import { makeBlobFromURI } from '../../helper'
-import Button from '../../Components/Button/Button'
-import userLogin from '../../redux/Actions/authActions'
+import CustomButton from '../../Components/CustomButton/CustomButton'
+import { userLogin } from '../../redux/Actions/authActions'
 
 class SavingProfile extends React.Component {
   constructor() {
@@ -85,9 +85,10 @@ class SavingProfile extends React.Component {
           source={profilePicUrl ? { uri: profilePicUrl } : require('../../images/dummyPic.png')}
           style={styles.profilePic}
         />
-        <Button style={[styles.uploadPicBtn, styles.uploadPicBtnText]} onPress={()=>{this.pickImage()}}>
-          Change Your Picture
-        </Button>
+        <CustomButton
+          title={'Change Your Picture'} 
+          style={[styles.uploadPicBtn, styles.uploadPicBtnText]} 
+          onPress={()=>{this.pickImage()}}/>
         <Form>
           <Item floatingLabel style={{ width: '80%' }}>
             <Label>Username</Label>
@@ -103,10 +104,12 @@ class SavingProfile extends React.Component {
             />
           </Item>
         </Form>
-        <Button style={[styles.finishBtn, styles.finishBtnText]} onPress={()=>{this.savingDataToFirebase()}}>
-         Finish
-        </Button>
-      </View>
+        <CustomButton
+          title={'Finish'}
+          style={[styles.finishBtn, styles.finishBtnText]} 
+          onPress={()=>{this.savingDataToFirebase()}}
+        />
+        </View>
     );
   }
 }

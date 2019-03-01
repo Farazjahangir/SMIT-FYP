@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { loginWithFacebook, checkingUserProfile } from '../../Config/Firebase/Firebase'
-import userLogin from '../../redux/Actions/authActions'
+import { loginUser } from '../../redux/Actions/authActions'
 import { connect } from 'react-redux'
 
 class Login extends React.Component {
@@ -11,7 +11,15 @@ class Login extends React.Component {
   }
 
   componentDidMount(){
-    if(this.props.isLogin){
+    console.log('Login' , this.props);
+    if(this.props.userObj){
+      this.props.navigation.replace('Dashboard')
+    }
+    
+  }
+  componentWillReceiveProps(nextProps){
+    console.log('componentWillReceiveProps' , nextProps);
+    if(nextProps.userObj){
       this.props.navigation.replace('Dashboard')
     }
     
@@ -21,13 +29,15 @@ class Login extends React.Component {
     try {
       console.log('TRY');
       const userData = await loginWithFacebook()
-      this.props.userLogin(userData)
+      console.log('USerDAta' , userData);
+      // this.props.loginUser(userData)
+      
       
       let checkingUser = await checkingUserProfile()
       if (checkingUser.exists) {       
         checkingUser =  checkingUser.data()
-        checkingUser.isLogin = true
-        this.props.userLogin(checkingUser)
+        // checkingUser.isLogin = true
+        this.props.loginUser(checkingUser)
          this.props.navigation.replace('Dashboard')
       }
       else {
@@ -55,7 +65,7 @@ class Login extends React.Component {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    userLogin: (userData) => dispatch(userLogin(userData))
+    loginUser: (userData) => dispatch(loginUser(userData))
   }
 
 }
@@ -63,7 +73,7 @@ const mapStateToProps = (state) => {
   console.log('MApState' , state.authReducer.user);
   
   return {
-    isLogin : state.authReducer.user.isLogin
+    userObj : state.authReducer.user
   }
 }
 

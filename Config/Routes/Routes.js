@@ -18,7 +18,7 @@ const DrawerNavigator = createDrawerNavigator({
 
 const AppNavigator = createStackNavigator({
     Login: {
-        screen: Login
+        screen: Login,
     },
     SavingProfile: {
         screen: SavingProfile
@@ -28,6 +28,11 @@ const AppNavigator = createStackNavigator({
     },
     SubmitSkills: {
         screen: SubmitSkills
+    }
+},{
+    headerMode: 'none',
+    navigationOptions: {
+        headerVisible: false,
     }
 });
 

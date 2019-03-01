@@ -26,9 +26,9 @@ const AppNavigator = createStackNavigator({
     Dashboard: {
         screen: DrawerNavigator,
     },
-    // SubmitSkills: {
-    //     screen: SubmitSkills
-    // }
+    SubmitSkills: {
+        screen: SubmitSkills
+    }
 });
 
 const Navigator = createAppContainer(AppNavigator)

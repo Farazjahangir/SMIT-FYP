@@ -40,17 +40,12 @@ class SubmitSkills extends Component {
         .onSnapshot((snapshot)=> {
             snapshot.docChanges().forEach((change)=> {
                 if (change.type === "added") {
-                    console.log("New city: ", change.doc.data());
-                     categoriesList = change.doc.data()
-                     console.log('asas' , categoriesList.categories);
-                     
+                     categoriesList = change.doc.data()                     
                 }
                 if (change.type === "modified") {
-                    console.log("Modified city: ", change.doc.data());
                      categoriesList = change.doc.data()
                 }
                 if (change.type === "removed") {
-                    console.log("Removed city: ", change.doc.data());
                      categoriesList = change.doc.data()
                 }
                 this.setState({cateogriesList : categoriesList.categories , list : true})
@@ -63,9 +58,6 @@ class SubmitSkills extends Component {
           allowsEditing: true,
           aspect: [4, 4]
         });
-    
-        console.log('Image', result);
-        
         if (!result.cancelled) {
           this.setState({picUrl : result.uri})
         }
@@ -86,8 +78,6 @@ class SubmitSkills extends Component {
         const { skillName, rate, description, selectedCateogory } = this.state
         let { picUrl } = this.state
         if(!picUrl.startsWith('http')){
-            console.log('IF' , picUrl);
-            
             await makeBlobFromURI(picUrl).then((blob)=>{
             picUrl = blob
             })    
@@ -103,8 +93,6 @@ class SubmitSkills extends Component {
         
     }
     render() {
-        console.log(this.state);
-        
         const { showSideBar, selectedCateogory, cateogriesList, list, picUrl } = this.state
         return (
             <View style={styles.container}>
@@ -126,7 +114,6 @@ class SubmitSkills extends Component {
                             onValueChange={(value)=>{this.setState({selectedCateogory : value})}}
                         >
                         {list ?  cateogriesList.map((val , i)=>{
-                            console.log('MAp' , val);   
                             return <Picker.Item label={val} value={val} key={Date.now() + i} />
                         })
                         :

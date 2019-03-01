@@ -71,15 +71,13 @@ const saveUserSkill = async (userSkillObj)=>{
     await storageRef.child(name).put(message)
     const url = await storageRef.child(name).getDownloadURL();
     userSkillObj.picUrl = url
-    console.log('userSkillObj.picUrl' , userSkillObj.picUrl);
-    
   }
 
-    await db.collection('Skills').doc(userUid).set({
+    await db.collection('Skills').add({
       SkillName : userSkillObj.selectedCateogory,
       Description : userSkillObj.description,
       Rate : userSkillObj.rate,
-      picUrl : userSkillObj.picUrl
+      picUrl : userSkillObj.picUrl,
     })
     return "Success"
 }

@@ -15,7 +15,8 @@ class Dashboard extends React.Component {
             list: false,
             isLoading: true,
             modalVisible: false,
-            index: 0
+            index: 0,
+            userUid :''
         }
     }
 
@@ -24,6 +25,9 @@ class Dashboard extends React.Component {
     };
 
     componentDidMount() {
+        if(this.props.userObj){
+            this.setState({userUid : this.props.userObj.userUid})
+        }
         console.log('Componrnt', this.props);
         let { skillsArr } = this.state
         let skillsList;
@@ -46,16 +50,22 @@ class Dashboard extends React.Component {
             });
     }
 
+    componentWillReceiveProps(nextProps){
+        if(nextProps.userObj){
+            this.setState({userUid : nextProps.userObj.userUid})
+        }
+    }
+
     // getFullDetails(i){
     //     const { skillsArr } = this.state
     //     console.log('getFullDetails' , skillsArr[i]);
 
     // }
     contact(){
-        const { skillsArr , index } = this.state
+        const { skillsArr , index, userUid } = this.state
         this.setState({modalVisible : false})
         const sellerUid = skillsArr[index].userUid
-        this.props.navigation.push('MessageBox' , {sellerUid})
+        this.props.navigation.push('MessageBox' , {sellerUid , userUid})
     }
 
     render() {
@@ -170,11 +180,7 @@ const mapStateToProps = (state) => {
     console.log('mapStateToProps', state.authReducer);
 
     return {
-        // userName: state.authReducer.user.userName,
-        // profilePicUrl: state.authReducer.user.profilePicUrl,
-        // userUid: state.authReducer.user.userUid,
-        // contactNum: state.authReducer.user.contactNum,
-        // isLogin: state.authReducer.user.isLogin
+        userObj: state.authReducer.user
     }
 }
 

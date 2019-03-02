@@ -1,45 +1,136 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Text, View, ScrollView, StyleSheet } from 'react-native'
-import { Item, Input } from 'native-base';
+import { View, ScrollView, StyleSheet } from 'react-native'
+import { Item, Input, List, ListItem, Left, Body, Right, Thumbnail, Text } from 'native-base';
 import CustomeButton from '../../Components/CustomButton/CustomButton'
 import CustomeHeader from '../../Components/CustomHeader/CustomHeader'
 
+import { firebase } from '../../Config/Firebase/Firebase'
 class MessageBox extends Component {
+  constructor(){
+    super()
+    this.state = {
+      roomId : '',
+      message: '',
+      messageArr : [],
+      userObj : ''
+    }
+  }
 
-  // componentDidMount(){
-  //   console.log('Login' , this.props);
-  //   if(this.props.userObj){
-  //     this.props.navigation.replace('Dashboard')
-  //   }
+  componentDidMount(){
+    if(this.props.userObj){
+        this.setState({userObj : this.props.userObj})
+    }
+    const { messageArr } = this.state
+    const db = firebase.firestore()
+    let roomId;
+    const userUid = this.props.userObj.userUid
+    const sellerUid = this.props.navigation.state.params.sellerUid
+    const userObject = {
+      [userUid] : true,
+      [sellerUid] : true,
+      createdAt : Date.now()
+    }
+    db.collection("rooms")
+    .where("userObject." + userUid, "==", true)
+    .where("userObject." + sellerUid, "==", true)
+    .onSnapshot(querySnapshot => {
+      if (querySnapshot.empty) {
+        console.log('querySnapshot.empty' , querySnapshot.empty);
+        
+        db.collection("rooms")
+          .add({ userObject })
+          .then(doc => {
+            roomId = doc.id;
+            this.setState({roomId : roomId})
+            return false;
+          });
+      }
+      querySnapshot.docChanges().forEach(value => {
+        db.collection("rooms")
+          .doc(value.doc.id)
+          .collection("messages")
+          .orderBy("createdAt")
+          .onSnapshot(querySnapshot => {
+            if(querySnapshot.empty){
+              console.log('querySnapshot.empty_Messages' , querySnapshot.empty);
+            }
+            // messageArr.push(querySnapshot.doc.data())
+            // this.setState({messageArr})
+            roomId = value.doc.id;
+            this.setState({roomId : roomId})
+            querySnapshot.docChanges().forEach(value => {
+              var senderId  = value.doc.data().senderUid;
+              messageArr.push(value.doc.data())
+              this.setState({messageArr , senderId})
+              
+            });
+          });
+      });
+    });   
+  }
+
+  componentWillReceiveProps(nextProps){
+    if(nextProps.userObj){
+        this.setState({userObj : nextProps.userObj})
+    }
+  }
+  sendMsg(){
+    const db = firebase.firestore()
+    const { roomId , message } = this.state
+    console.log('RoomId' , roomId);
     
-  // }
-  // componentWillReceiveProps(nextProps){
-  //   console.log('componentWillReceiveProps' , nextProps);
-  //   if(nextProps.userObj){
-  //     this.props.navigation.replace('Dashboard')
-  //   }
-    
-  // }
+    const msgObj = {
+      senderName : this.props.userObj.userName,
+      message,
+      senderUid : this.props.navigation.state.params.userUid,
+      sellerUid : 'xihAgI8B2LYpGJG5ijQRyZbUDbr3',
+      createdAt : Date.now()
+    }
+    db.collection("rooms")
+    .doc(roomId)
+    .collection("messages")
+    .add(msgObj);
+}
 
   render() {
-      console.log('Message' , this.props);
+     const { messageArr } = this.state
+    const { userUid } = this.props.userObj
+    console.log('message' , messageArr);
+    
       
     return (
       <View style={{flex : 1}}>
         <CustomeHeader title={'Message Box'} />
         <View style={{flex :1}}>
           <ScrollView>
+              {messageArr.map((val)=>{
+                return <List>
+                <ListItem avatar>
+                  {val.senderUid === userUid
+                    ?
+                    <Body>
+                    <Text>{val.message}</Text>
+                  </Body>
+                  :
+                  <Body style={{flex:1  , alignItems: 'flex-end'}}>
+                    <Text>{val.message}</Text>
+                  </Body>
+                  }
+                  </ListItem>
+                  </List>
+                  })
+                  }
           </ScrollView>
         </View>
         <View style={{height : 100 , flexDirection : 'row'}}>
             <View style={{flex: 0.75 , justifyContent :'flex-end'}}>
               <Item  rounded>
-                <Input placeholder='Rounded Textbox'/>
+                <Input placeholder='Rounded Textbox' onChangeText={(text)=>{this.setState({message : text})}} />
               </Item>
             </View>
           <View style={{flex: 0.25 , justifyContent :'flex-end'}}>
-            <CustomeButton title="Send" style={[styles.sendBtn , styles.sendBtnText]} />
+            <CustomeButton title="Send" style={[styles.sendBtn , styles.sendBtnText]} onPress={()=>{this.sendMsg()}} />
           </View>
         </View>
       </View>
@@ -55,7 +146,7 @@ const mapStateToProps = (state) => {
   console.log('mapStateToProps', state.authReducer);
 
   return {
-      // userObj: state.authReducer.user,
+      userObj: state.authReducer.user,
   }
 }
 

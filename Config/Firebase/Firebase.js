@@ -13,6 +13,7 @@ firebase.initializeApp(config);
 const db = firebase.firestore();
 const storageRef = firebase.storage().ref()
 
+// Function For Facebook Login
 const loginWithFacebook = async () => {
   const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync(
     '2240305036240222',
@@ -27,7 +28,6 @@ const loginWithFacebook = async () => {
         userUid: user.user.uid,
         profilePicUrl: user.user.photoURL + '?type=large'
       }
-      console.log('Firebase' , userObj);
       return userObj
   }
   else{
@@ -36,11 +36,11 @@ const loginWithFacebook = async () => {
 }
 
 
+// Saving User's Data To Firestore
 const SavingUserData = async (userObj) =>{
   const uid = userObj.userUid
-  // let profilePic = ''
-  console.log('UserObject' , userObj.profilePicUrl);
 
+// If Profile Pic Url Is Blob
   if(typeof userObj.profilePicUrl === 'object'){
     console.log('FirebaseIf' , userObj.profilePicUrl);
     
@@ -49,7 +49,6 @@ const SavingUserData = async (userObj) =>{
     await storageRef.child(name).put(message)
     const url = await storageRef.child(name).getDownloadURL();
     userObj.profilePicUrl = url
-  //  console.log('ProfilePioc' , profilePicUrl);
   }
 
     const userDataUploaded =  await db.collection('users').doc(uid).set({
@@ -63,10 +62,11 @@ const SavingUserData = async (userObj) =>{
       return userObj
 }
 
+// Saving User's Skill In Firestore 
 const saveUserSkill = async (userSkillObj)=>{
-  console.log('USerSKills' , userSkillObj);
    const userUid = firebase.auth().currentUser.uid;
 
+  //  If Pic Url IS Blob
    if(typeof userSkillObj.picUrl._data === 'object'){
      
     let name = `${Date.now()} - ${userUid}`
@@ -86,6 +86,7 @@ const saveUserSkill = async (userSkillObj)=>{
     return 'success'
 }
 
+// Function To Check Is User Is Already Registered
 const checkingUserProfile = async () =>{
   try{
       const userUid =  firebase.auth().currentUser.uid;

@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ScrollView } from 'react-native'
-import { Container, Header, Content, Form, Item, Input, Label, Picker, Textarea, Spinner  } from 'native-base';
+import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView } from 'react-native'
+import { Form, Item, Input, Label, Picker, Textarea, Spinner  } from 'native-base';
 import { ImagePicker  } from 'expo';
 import CustomButton from '../../Components/CustomButton/CustomButton'
-import { saveUserSkill , getCateogriesFromDb } from '../../Config/Firebase/Firebase'
+import { saveUserSkill } from '../../Config/Firebase/Firebase'
 import { firebase } from '../../Config/Firebase/Firebase'
 import { makeBlobFromURI } from '../../helper'
 import CustomHeader from '../../Components/CustomHeader/CustomHeader'
@@ -24,20 +24,11 @@ class SubmitSkills extends Component {
             error : false
         }
     }
-    static navigationOptions = ({ navigation }) => {
-        return {
-            headerTitle: "Dashboard",
-            headerRight: (
-                <TouchableOpacity style={{ backgroundColor: 'blue', padding: 10 }} onPress={navigation.getParam('openSideMenu')}>
-                    <Text>Menu</Text>
-                </TouchableOpacity>
-            ),
-        };
-    };
 
     componentDidMount() {
         let categoriesList;
-    // require("firebase/firestore");
+
+        // Geeting Cateogries From DB
         const db = firebase.firestore()
         db.collection("categories")
         .onSnapshot((snapshot)=> {
@@ -56,6 +47,7 @@ class SubmitSkills extends Component {
         });  
         
     }
+
     async pickImage(){
         let result = await ImagePicker.launchImageLibraryAsync({
           allowsEditing: true,
@@ -175,20 +167,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         fontSize: 20
     },
-    // submitBtn: {
-    //     borderWidth: 1,
-    //     borderColor: 'blue',
-    //     backgroundColor: 'blue',
-    //     borderRadius: 10,
-    //     marginTop: 20,
-    //     width: 120,
-    //     alignItems: 'center'
-    // },
-    // submitBtnText: {
-    //     color: '#fff',
-    //     padding: 6,
-    //     fontSize: 14,
-    // },
     skillImg : {
         width : 180,
         height : 180,

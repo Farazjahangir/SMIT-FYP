@@ -1,3 +1,4 @@
+// Function To Convert Image Into Blob
 const makeBlobFromURI = (uri) => {
     return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();

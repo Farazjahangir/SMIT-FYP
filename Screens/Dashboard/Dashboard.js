@@ -6,6 +6,7 @@ import { Content, List, ListItem, Left, Body, Right, Thumbnail, Text, Spinner, C
 import CustomButton from '../../Components/CustomButton/CustomButton'
 import { firebase } from '../../Config/Firebase/Firebase'
 import CustomHeader from '../../Components/CustomHeader/CustomHeader'
+
 class Dashboard extends React.Component {
     constructor() {
         super()
@@ -19,18 +20,14 @@ class Dashboard extends React.Component {
             userUid :''
         }
     }
-
-    static navigationOptions = {
-        header: null
-    };
-
     componentDidMount() {
+        // Checking USer Obj In Redux
         if(this.props.userObj){
             this.setState({userUid : this.props.userObj.userUid})
         }
-        console.log('Componrnt', this.props);
         let { skillsArr } = this.state
         let skillsList;
+        // Geeting Skillful users from DB
         const db = firebase.firestore()
         db.collection("Skills")
             .onSnapshot((snapshot) => {
@@ -56,11 +53,6 @@ class Dashboard extends React.Component {
         }
     }
 
-    // getFullDetails(i){
-    //     const { skillsArr } = this.state
-    //     console.log('getFullDetails' , skillsArr[i]);
-
-    // }
     contact(){
         const { skillsArr , index, userUid } = this.state
         this.setState({modalVisible : false})
@@ -75,11 +67,11 @@ class Dashboard extends React.Component {
                 modalVisible, 
                 index 
             } = this.state
-        console.log('Detal', skillsArr[index]);
 
         return (
             <View style={{ flex: 1 }}>
                 <CustomHeader title={'Dashboard'} />
+                {/* Loader */}
                 {isLoading && <Spinner color='blue' style={{ flex: 1, justifyContent: 'center' }} />}
                 <ScrollView vertical={true} contentContainerStyle={styles.contentContainer}>
                     {list &&
@@ -146,6 +138,8 @@ class Dashboard extends React.Component {
                                     </View>
                                 </ScrollView>
                             </Modal>
+
+                            {/* MApping On Skillful users Arr */}
                             {skillsArr.map((val, i) => {
                                 return <Content key={Date.now() + i} style={{ marginTop: 20 }}>
                                     <List >

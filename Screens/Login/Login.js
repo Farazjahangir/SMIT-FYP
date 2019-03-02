@@ -114,12 +114,12 @@ const styles = StyleSheet.create({
     width: '70%',
     borderRadius: 20,
     alignItems: 'center',
-    padding: 15,
+    padding: 10,
     backgroundColor : '#0984e3'
   },
   buttonText: {
     fontWeight: '900',
     color: '#fff',
-    fontSize: 20
+    fontSize: 18
   }
 });

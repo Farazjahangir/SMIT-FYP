@@ -33,13 +33,13 @@ class MessageBox extends Component {
       createdAt : Date.now()
     }
     const userInfo = [userUid , sellerUid]
+    // Getting Those Room Where Sender And Seller Uid Exist
     db.collection("rooms")
     .where("userObject." + userUid, "==", true)
     .where("userObject." + sellerUid, "==", true)
     .onSnapshot(querySnapshot => {
+      // If Room Not Found then Will Create One
       if (querySnapshot.empty) {
-        console.log('querySnapshot.empty' , querySnapshot.empty);
-        
         db.collection("rooms")
           .add({ userObject , userInfo })
           .then(doc => {
@@ -48,6 +48,7 @@ class MessageBox extends Component {
             return false;
           });
       }
+      // IF Found Then Fetching Messages
       querySnapshot.docChanges().forEach(value => {
         db.collection("rooms")
           .doc(value.doc.id)
@@ -96,9 +97,6 @@ class MessageBox extends Component {
   render() {
      const { messageArr, isLoading } = this.state
     const { userUid } = this.props.userObj
-    console.log('message' , this.props);
-    
-      
     return (
       <View style={{flex : 1}}>
         <CustomeHeader title={'Message Box'} />

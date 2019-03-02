@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux'
 import { Constants, Location, Permissions } from 'expo';
 
-import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, Platform } from 'react-native';
+import { StyleSheet, Text, View, Image, Platform } from 'react-native';
 import { ImagePicker  } from 'expo';
 import { Form, Item, Input, Label } from 'native-base';
 import { SavingUserData }  from '../../Config/Firebase/Firebase'
@@ -29,9 +29,6 @@ class SavingProfile extends React.Component {
       isLoading : false
     }
   }
-  static navigationOptions = {
-    header: null
-  }
 
   componentDidMount() {
     console.log('SAvingProfile' , this.props);
@@ -49,6 +46,7 @@ class SavingProfile extends React.Component {
       this.setState({ userName, profilePicUrl , userUid })
   }
 
+  // Gettiing Permission To Get User Location
   _getLocationAsync = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status !== 'granted') {
@@ -61,25 +59,13 @@ class SavingProfile extends React.Component {
     this.setState({ location });
   };
 
-  // componentWillReceiveProps(nextProps){
-  //   console.log('componentWillReceiveProps');
-    
-  //   if(nextProps.userObj){
-  //     console.log('SavingProfile2' , nextProps);
-      
-  //     this.setState({ userName: nextProps.userObj.userName, profilePicUrl: nextProps.userObj.profilePic, userUid: nextProps.userObj.userUid })
-  //   }
 
-  // }
-
+  // Function For Upload Image From Gallery
   async pickImage(){
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
       aspect: [4, 4]
     });
-
-    console.log('Image', result);
-    
     if (!result.cancelled) {
       this.setState({profilePicUrl : result.uri})
     }
@@ -87,20 +73,16 @@ class SavingProfile extends React.Component {
 
   async savingDataToFirebase() {
     this.setState({isLoading : true})
-    console.log("Function");
-    
     const { userName, userUid, contactNum, error, location } = this.state
     let {  profilePicUrl } = this.state
-    console.log('UID' , userUid);
-    
+
     if (userName === "" || contactNum === "") {
       this.setState({ error: true })
       return
     }
     this.setState({ error: false })
     if(!profilePicUrl.startsWith('http')){
-        console.log('IF' , profilePicUrl);
-        
+      // Function To Change Image Path In Blob 
         await makeBlobFromURI(profilePicUrl).then((blob)=>{
         profilePicUrl = blob
         })    
@@ -122,7 +104,6 @@ class SavingProfile extends React.Component {
 
   render() {
     const { userName, profilePicUrl, isLoading, error } = this.state
-    console.log('Location' , this.state);
     
     return (
       <View style={styles.container}>

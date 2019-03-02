@@ -1,8 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { Text, View, StyleSheet, Image , TouchableOpacity } from 'react-native'
-import { Container , Header, Icon, Button, Title, Content, List, ListItem, Left, Body, Right, Thumbnail, Spinner } from 'native-base';
+import {  StyleSheet, Image , TouchableOpacity } from 'react-native'
+import { Header, Icon, Button, Title, Left, Body, Right } from 'native-base';
 import { withNavigation } from 'react-navigation'
 import { logoutUser } from '../../redux/Actions/authActions'
 
@@ -11,20 +11,10 @@ class CustomHeader extends React.Component {
         this.props.logoutUser()
         this.props.navigation.replace('Login')
     }      
-    componentDidMount(){
-        console.log('HeaderProps' , this.props);
-        
-    }
-    
-    
     render(){
         return(
             <Header style={{marginTop : 25}}>
             <Left>
-                {/* <CustomButton
-                    title={'Menu'} 
-                    style={[styles.viewBtnText , styles.viewBtnText]}
-                /> */}
                 <Button transparent>
                   <Icon name='arrow-back' onPress={()=>{this.props.navigation.goBack()}} />
                 </Button>

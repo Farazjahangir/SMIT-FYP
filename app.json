@@ -8,9 +8,12 @@
       "ios",
       "android"
     ],
+    "android" : {
+      "package": "com.SMIT_FYP.app"
+    },
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/appIcon.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",

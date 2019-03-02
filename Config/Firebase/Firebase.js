@@ -25,10 +25,9 @@ const loginWithFacebook = async () => {
       const userObj = {
         userName: user.user.displayName,
         userUid: user.user.uid,
-        profilePic: user.user.photoURL + '?type=large'
+        profilePicUrl: user.user.photoURL + '?type=large'
       }
       console.log('Firebase' , userObj);
-      
       return userObj
   }
   else{
@@ -57,9 +56,10 @@ const SavingUserData = async (userObj) =>{
         userName : userObj.userName,
         profilePicUrl : userObj.profilePicUrl,
         contactNum : userObj.contactNum,
-        userUid : userObj.userUid
+        userUid : userObj.userUid,
+        lat : userObj.lat,
+        long : userObj.long
       })  
-      userObj.isLogin = true
       return userObj
 }
 

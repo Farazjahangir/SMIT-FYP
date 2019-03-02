@@ -28,7 +28,11 @@ class MessageBox extends Component {
     return (
       <View style={{flex : 1}}>
         <CustomeHeader title={'Message Box'} />
-        <View style={{flex : 100, flexDirection : 'row'}}>
+        <View style={{flex :1}}>
+          <ScrollView>
+          </ScrollView>
+        </View>
+        <View style={{height : 100 , flexDirection : 'row'}}>
             <View style={{flex: 0.75 , justifyContent :'flex-end'}}>
               <Item  rounded>
                 <Input placeholder='Rounded Textbox'/>
@@ -38,8 +42,6 @@ class MessageBox extends Component {
             <CustomeButton title="Send" style={[styles.sendBtn , styles.sendBtnText]} />
           </View>
         </View>
-        <ScrollView>
-        </ScrollView>
       </View>
     )
   }

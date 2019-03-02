@@ -52,8 +52,10 @@ class Dashboard extends React.Component {
 
     // }
     contact(){
+        const { skillsArr , index } = this.state
         this.setState({modalVisible : false})
-        this.props.navigation.push('MessageBox')
+        const sellerUid = skillsArr[index].userUid
+        this.props.navigation.push('MessageBox' , {sellerUid})
     }
 
     render() {

@@ -28,6 +28,7 @@ export default class App extends React.Component {
   }
   render() {
     const { fontLoad } = this.state
+    console.disableYellowBox = true
     return (
       fontLoad && 
       <Provider store={store}>

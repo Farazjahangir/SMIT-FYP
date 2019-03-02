@@ -1,13 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux'
+import { Constants, Location, Permissions } from 'expo';
 
-import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, Platform } from 'react-native';
 import { ImagePicker  } from 'expo';
 import { Form, Item, Input, Label } from 'native-base';
 import { SavingUserData }  from '../../Config/Firebase/Firebase'
 import { makeBlobFromURI } from '../../helper'
 import CustomButton from '../../Components/CustomButton/CustomButton'
-import { userLogin } from '../../redux/Actions/authActions'
+import { loginUser } from '../../redux/Actions/authActions'
 
 class SavingProfile extends React.Component {
   constructor() {
@@ -23,6 +24,8 @@ class SavingProfile extends React.Component {
       error: false,
       image: null,
       blob : false,
+      location: null,
+      errorMessage: null,
     }
   }
   static navigationOptions = {
@@ -30,8 +33,43 @@ class SavingProfile extends React.Component {
   }
 
   componentDidMount() {
-    this.setState({ userName: this.props.userName, profilePicUrl: this.props.profilePicUrl, userUid: this.props.userUid })
+    console.log('SAvingProfile' , this.props);
+    
+    const { userName , userUid, profilePicUrl } = this.props.navigation.state.params.userData
+    
+    if (Platform.OS === 'android' && !Constants.isDevice) {
+      this.setState({
+        errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
+      });
+    } else {
+      this._getLocationAsync();
+    }
+      
+      this.setState({ userName, profilePicUrl , userUid })
   }
+
+  _getLocationAsync = async () => {
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== 'granted') {
+      this.setState({
+        errorMessage: 'Permission to access location was denied',
+      });
+    }
+
+    let location = await Location.getCurrentPositionAsync({enableHighAccuracy: true });
+    this.setState({ location });
+  };
+
+  // componentWillReceiveProps(nextProps){
+  //   console.log('componentWillReceiveProps');
+    
+  //   if(nextProps.userObj){
+  //     console.log('SavingProfile2' , nextProps);
+      
+  //     this.setState({ userName: nextProps.userObj.userName, profilePicUrl: nextProps.userObj.profilePic, userUid: nextProps.userObj.userUid })
+  //   }
+
+  // }
 
   async pickImage(){
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -49,7 +87,7 @@ class SavingProfile extends React.Component {
   async savingDataToFirebase() {
     console.log("Function");
     
-    const { userName, profilePicBlob, userUid, contactNum, error, blob } = this.state
+    const { userName, profilePicBlob, userUid, contactNum, error, location } = this.state
     let {  profilePicUrl } = this.state
     console.log('UID' , userUid);
     
@@ -70,15 +108,18 @@ class SavingProfile extends React.Component {
       profilePicUrl,
       contactNum,
       userUid,
-      blob
+      lat : location.coords.latitude,
+      long : location.coords.longitude
     }
     const userData = await SavingUserData(userObj)
-    this.props.userLogin(userData)
+    this.props.loginUser(userData)
     
   }
 
   render() {
     const { userName, profilePicUrl, userUid, nextStep, contactNum, error } = this.state
+    console.log('Location' , this.state);
+    
     return (
       <View style={styles.container}>
         <Image
@@ -116,16 +157,14 @@ class SavingProfile extends React.Component {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-      userLogin: (userData) => dispatch(userLogin(userData))
+      loginUser: (userData) => dispatch(loginUser(userData))
     }
 
 }
 const mapStateToProps = (state) => {
 
   return {
-    userName: state.authReducer.user.userName,
-    profilePicUrl : state.authReducer.user.profilePic,
-    userUid : state.authReducer.user.userUid
+    // userObj : state.authReducer.user
   }
 }
 

@@ -4,6 +4,7 @@ import SavingProfile from '../../Screens/SavingProfile/SavingProfile'
 import Dashboard from '../../Screens/Dashboard/Dashboard'
 import SubmitSkills from '../../Screens/SubmitSkills/SubmitSkills'
 import MessageBox from '../../Screens/MessageBox/MessageBox'
+import Search from '../../Screens/Search/Search'
 
 
 
@@ -14,6 +15,9 @@ const DrawerNavigator = createDrawerNavigator({
     },
     SubmitSkills : {
         screen : SubmitSkills
+    },
+    Search : {
+        screen : Search
     }
 });
 
@@ -24,9 +28,9 @@ const AppNavigator = createStackNavigator({
     // SavingProfile: {
     //     screen: SavingProfile
     // },
-    // Dashboard: {
-    //     screen: DrawerNavigator,
-    // },
+    Dashboard: {
+        screen: DrawerNavigator,
+    },
     // SubmitSkills: {
     //     screen: SubmitSkills
     // },

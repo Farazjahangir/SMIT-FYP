@@ -6,42 +6,52 @@ import { connect } from 'react-redux'
 
 class Login extends React.Component {
 
+  constructor(){
+    super()
+
+    this.state = {
+      isLogin : true
+    }
+  }
+
   static navigationOptions = {
     header: null
   }
 
   componentDidMount(){
-    console.log('Login' , this.props);
     if(this.props.userObj){
+      console.log('Login IF' , this.props);
       this.props.navigation.replace('Dashboard')
     }
     
   }
   componentWillReceiveProps(nextProps){
-    console.log('componentWillReceiveProps' , nextProps);
-    if(nextProps.userObj){
+    const { isLogin } = this.state
+    if(nextProps.userObj && isLogin){
+      console.log('Login_componentWillReceiveProps' , nextProps);
       this.props.navigation.replace('Dashboard')
-    }
-    
+    }  
   }
 
   async login() {
     try {
       console.log('TRY');
       const userData = await loginWithFacebook()
+      this.setState({isLogin : false})
       console.log('USerDAta' , userData);
-      // this.props.loginUser(userData)
       
       
       let checkingUser = await checkingUserProfile()
-      if (checkingUser.exists) {       
+      if (checkingUser.exists) {
+        console.log('checkingUser.exists' , checkingUser.exists);
         checkingUser =  checkingUser.data()
-        // checkingUser.isLogin = true
         this.props.loginUser(checkingUser)
          this.props.navigation.replace('Dashboard')
       }
       else {
-         this.props.navigation.replace('SavingProfile')
+        // this.props.loginUser(userData)
+        console.log('checkingUser.exists.Else' , checkingUser.exists);
+         this.props.navigation.replace('SavingProfile' , {userData : userData})
       }
     }
     catch (e) {

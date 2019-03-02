@@ -96,6 +96,7 @@ const checkingUserProfile = async () =>{
     throw 'not found'
   }
 }
+
     
 export {
   firebase,

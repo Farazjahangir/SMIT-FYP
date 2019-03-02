@@ -3,6 +3,7 @@ import Login from '../../Screens/Login/Login'
 import SavingProfile from '../../Screens/SavingProfile/SavingProfile'
 import Dashboard from '../../Screens/Dashboard/Dashboard'
 import SubmitSkills from '../../Screens/SubmitSkills/SubmitSkills'
+import MessageBox from '../../Screens/MessageBox/MessageBox'
 
 
 
@@ -17,17 +18,20 @@ const DrawerNavigator = createDrawerNavigator({
 });
 
 const AppNavigator = createStackNavigator({
-    Login: {
-        screen: Login,
-    },
-    SavingProfile: {
-        screen: SavingProfile
-    },
-    Dashboard: {
-        screen: DrawerNavigator,
-    },
-    SubmitSkills: {
-        screen: SubmitSkills
+    // Login: {
+    //     screen: Login,
+    // },
+    // SavingProfile: {
+    //     screen: SavingProfile
+    // },
+    // Dashboard: {
+    //     screen: DrawerNavigator,
+    // },
+    // SubmitSkills: {
+    //     screen: SubmitSkills
+    // },
+    MessageBox: {
+        screen: MessageBox
     }
 },{
     headerMode: 'none',

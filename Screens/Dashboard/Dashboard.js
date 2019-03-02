@@ -51,6 +51,10 @@ class Dashboard extends React.Component {
     //     console.log('getFullDetails' , skillsArr[i]);
 
     // }
+    contact(){
+        this.setState({modalVisible : false})
+        this.props.navigation.push('MessageBox')
+    }
 
     render() {
         const { skillsArr, 
@@ -105,7 +109,7 @@ class Dashboard extends React.Component {
                                         <View style={{ flexDirection: 'row', marginTop: 20 }}>
                                             <CustomButton
                                                 title={'Contact'}
-                                                onPress={() => { this.setState({ modalVisible: false }) }}
+                                                onPress={() => {this.contact()}}
                                                 style={[styles.contactBtn, styles.contactBtnText]}
                                             />
                                             <CustomButton

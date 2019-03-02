@@ -25,12 +25,13 @@ class MessageBox extends Component {
     const db = firebase.firestore()
     let roomId;
     const userUid = this.props.userObj.userUid
-    const sellerUid = this.props.navigation.state.params.sellerUid
+    const sellerUid =this.props.navigation.state.params.sellerUid
     const userObject = {
       [userUid] : true,
       [sellerUid] : true,
       createdAt : Date.now()
     }
+    const userInfo = [userUid , sellerUid]
     db.collection("rooms")
     .where("userObject." + userUid, "==", true)
     .where("userObject." + sellerUid, "==", true)
@@ -39,7 +40,7 @@ class MessageBox extends Component {
         console.log('querySnapshot.empty' , querySnapshot.empty);
         
         db.collection("rooms")
-          .add({ userObject })
+          .add({ userObject , userInfo })
           .then(doc => {
             roomId = doc.id;
             this.setState({roomId : roomId})
@@ -55,8 +56,6 @@ class MessageBox extends Component {
             if(querySnapshot.empty){
               console.log('querySnapshot.empty_Messages' , querySnapshot.empty);
             }
-            // messageArr.push(querySnapshot.doc.data())
-            // this.setState({messageArr})
             roomId = value.doc.id;
             this.setState({roomId : roomId})
             querySnapshot.docChanges().forEach(value => {
@@ -83,8 +82,8 @@ class MessageBox extends Component {
     const msgObj = {
       senderName : this.props.userObj.userName,
       message,
-      senderUid : this.props.navigation.state.params.userUid,
-      sellerUid : 'xihAgI8B2LYpGJG5ijQRyZbUDbr3',
+      senderUid : this.props.userObj.userUid,
+      sellerUid : this.props.navigation.state.params.sellerUid,
       createdAt : Date.now()
     }
     db.collection("rooms")
@@ -96,7 +95,7 @@ class MessageBox extends Component {
   render() {
      const { messageArr } = this.state
     const { userUid } = this.props.userObj
-    console.log('message' , messageArr);
+    console.log('message' , this.props);
     
       
     return (

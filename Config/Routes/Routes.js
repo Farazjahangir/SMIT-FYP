@@ -5,6 +5,7 @@ import Dashboard from '../../Screens/Dashboard/Dashboard'
 import SubmitSkills from '../../Screens/SubmitSkills/SubmitSkills'
 import MessageBox from '../../Screens/MessageBox/MessageBox'
 import Search from '../../Screens/Search/Search'
+import Inbox from '../../Screens/Inbox/Inbox'
 
 
 
@@ -18,6 +19,9 @@ const DrawerNavigator = createDrawerNavigator({
     },
     Search : {
         screen : Search
+    },
+    Inbox : {
+        screen : Inbox
     }
 });
 
@@ -36,7 +40,7 @@ const AppNavigator = createStackNavigator({
     // },
     MessageBox: {
         screen: MessageBox
-    }
+    },
 },{
     headerMode: 'none',
     navigationOptions: {

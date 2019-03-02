@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, ScrollView, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
-import { Container, Header, Content, List, ListItem, Text, Left, Right, Icon } from 'native-base';
+import { Container, Header, Content, List, ListItem, Text, Left, Right, Icon, Spinner } from 'native-base';
 import CustomHeader from '../../Components/CustomHeader/CustomHeader'
 import { firebase } from '../../Config/Firebase/Firebase'
 class Inbox extends Component {
@@ -9,13 +9,16 @@ class Inbox extends Component {
         super()
         this.state = {
             userObj: '',
-            inboxArr : []
+            inboxArr : [],
+            isLoading : true
         }
     }
 
     componentDidMount() {
         const { inboxArr } = this.state
         if (this.props.userObj) {
+            console.log('ComponentDidMount');
+            
             const userUid = this.props.userObj.userUid
             const db = firebase.firestore()
             db.collection("rooms").where("userObject." + userUid, "==", true)
@@ -44,9 +47,7 @@ class Inbox extends Component {
                                     contactedUser
                                 }
                                 inboxArr.push(inboxObj)
-                               this.setState({inboxArr})
-                                
-
+                               this.setState({inboxArr , isLoading : false})
                             })
 
                     })
@@ -63,15 +64,16 @@ class Inbox extends Component {
         this.props.navigation.push('MessageBox' , {sellerUid} )
     }
     render() {
-        const { inboxArr } = this.state
+        const { inboxArr, isLoading } = this.state
         
         return (
             <View>
                 <CustomHeader title={'Inbox'} />
-                <ScrollView vertical={true}>
+                {isLoading && <Spinner color ="blue" style={{marginTop : 20}} />}
+                <ScrollView vertical={true} >
                 <List>
-                {inboxArr.map((val)=>{
-               return <ListItem style={{marginTop : 20}}>
+                {!isLoading && inboxArr.map((val , i)=>{
+               return <ListItem style={{marginTop : 20}} key ={i}>
                         <Left>
                             <Text>{val.userName}</Text>
                         </Left>

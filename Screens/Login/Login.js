@@ -3,14 +3,17 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { loginWithFacebook, checkingUserProfile } from '../../Config/Firebase/Firebase'
 import { loginUser } from '../../redux/Actions/authActions'
 import { connect } from 'react-redux'
+import { Spinner } from 'native-base'
 
+import CustomButton from '../../Components/CustomButton/CustomButton'
 class Login extends React.Component {
 
   constructor(){
     super()
 
     this.state = {
-      isLogin : true
+      isLogin : true,
+      isLoading : false
     }
   }
 
@@ -26,18 +29,19 @@ class Login extends React.Component {
     
   }
   componentWillReceiveProps(nextProps){
-    const { isLogin } = this.state
-    if(nextProps.userObj && isLogin){
+    // const { isLogin } = this.state
+    if(nextProps.userObj){
       console.log('Login_componentWillReceiveProps' , nextProps);
       this.props.navigation.replace('Dashboard')
     }  
   }
 
   async login() {
+    this.setState({isLoading : true})
     try {
       console.log('TRY');
       const userData = await loginWithFacebook()
-      this.setState({isLogin : false})
+      // this.setState({isLogin : false})
       console.log('USerDAta' , userData);
       
       
@@ -47,11 +51,12 @@ class Login extends React.Component {
         checkingUser =  checkingUser.data()
         this.props.loginUser(checkingUser)
          this.props.navigation.replace('Dashboard')
+         this.setState({isLoading : false})
       }
       else {
-        // this.props.loginUser(userData)
         console.log('checkingUser.exists.Else' , checkingUser.exists);
          this.props.navigation.replace('SavingProfile' , {userData : userData})
+         this.setState({isLoading : false})
       }
     }
     catch (e) {
@@ -59,15 +64,16 @@ class Login extends React.Component {
     }
   }
   render() {
+    const { isLoading } = this.state
   return (
     <View style={styles.container}>
       <Text style={styles.text}>SMIT-FYP</Text>
-      <TouchableOpacity
+      <CustomButton
+        title={'Login With Facebook'}
         onPress={() => { this.login() }}
-        style={styles.button}
-      >
-        <Text style={styles.buttonText}>Login With Facebook</Text>
-      </TouchableOpacity>
+        style = {[styles.button , styles.buttonText]}
+      />
+      {isLoading && <Spinner color={'blue'} />}
     </View>
   );
 }
@@ -104,15 +110,16 @@ const styles = StyleSheet.create({
   },
   button: {
     borderWidth: 2,
-    borderColor: '#341f97',
+    borderColor: '#0984e3',
     width: '70%',
-    borderRadius: 100,
+    borderRadius: 20,
     alignItems: 'center',
-    padding: 15
+    padding: 15,
+    backgroundColor : '#0984e3'
   },
   buttonText: {
     fontWeight: '900',
-    color: '#341f97',
+    color: '#fff',
     fontSize: 20
   }
 });

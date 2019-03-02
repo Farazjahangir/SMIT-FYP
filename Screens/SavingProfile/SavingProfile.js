@@ -26,6 +26,7 @@ class SavingProfile extends React.Component {
       blob : false,
       location: null,
       errorMessage: null,
+      isLoading : false
     }
   }
   static navigationOptions = {
@@ -85,16 +86,17 @@ class SavingProfile extends React.Component {
   };
 
   async savingDataToFirebase() {
+    this.setState({isLoading : true})
     console.log("Function");
     
-    const { userName, profilePicBlob, userUid, contactNum, error, location } = this.state
+    const { userName, userUid, contactNum, error, location } = this.state
     let {  profilePicUrl } = this.state
     console.log('UID' , userUid);
     
-    // if (userName || contactNum === "") {
-    //   this.setState({ error: true })
-    //   return
-    // }
+    if (userName === "" || contactNum === "") {
+      this.setState({ error: true })
+      return
+    }
     this.setState({ error: false })
     if(!profilePicUrl.startsWith('http')){
         console.log('IF' , profilePicUrl);
@@ -112,12 +114,14 @@ class SavingProfile extends React.Component {
       long : location.coords.longitude
     }
     const userData = await SavingUserData(userObj)
-    this.props.loginUser(userData)
+    await this.props.loginUser(userData)
+    this.props.navigation.replace('Dashboard')
+    this.setState({isLoading : false})
     
   }
 
   render() {
-    const { userName, profilePicUrl, userUid, nextStep, contactNum, error } = this.state
+    const { userName, profilePicUrl, isLoading, error } = this.state
     console.log('Location' , this.state);
     
     return (
@@ -142,6 +146,8 @@ class SavingProfile extends React.Component {
             <Label>Your Contact Num</Label>
             <Input
               onChange={(e) => { this.setState({ contactNum: e.nativeEvent.text }) }}
+              keyboardType = {'number-pad'}
+              maxLength = {11}
             />
           </Item>
         </Form>
@@ -150,6 +156,7 @@ class SavingProfile extends React.Component {
           style={[styles.finishBtn, styles.finishBtnText]} 
           onPress={()=>{this.savingDataToFirebase()}}
         />
+        {error && <Text style={{fontSize : 18 , color : 'red'}}>All Fields Are Compulsory</Text>}
         </View>
     );
   }

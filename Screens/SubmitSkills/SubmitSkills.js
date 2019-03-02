@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ScrollView } from 'react-native'
-import { Container, Header, Content, Form, Item, Input, Label, Picker, Textarea  } from 'native-base';
+import { Container, Header, Content, Form, Item, Input, Label, Picker, Textarea, Spinner  } from 'native-base';
 import { ImagePicker  } from 'expo';
 import CustomButton from '../../Components/CustomButton/CustomButton'
 import { saveUserSkill , getCateogriesFromDb } from '../../Config/Firebase/Firebase'
@@ -19,7 +19,9 @@ class SubmitSkills extends Component {
             picUrl: '',
             selectedCateogory : '',
             cateogriesList : '',
-            list : false
+            list : false,
+            isLoading : false,
+            error : false
         }
     }
     static navigationOptions = ({ navigation }) => {
@@ -64,20 +66,16 @@ class SubmitSkills extends Component {
         }
       };    
 
-    // openSideMenu = () => {
-    //     const showSideBar = this.state.showSideBar
-    //     if (showSideBar) {
-    //         this.setState({ showSideBar: false })
-    //     }
-    //     else {
-    //         this.setState({ showSideBar: true })
-    //     }
-
-    // }
-
     async submitSkill() {
-        const { skillName, rate, description, selectedCateogory } = this.state
+        this.setState({isLoading : true})
+        const { rate, description, selectedCateogory } = this.state
         let { picUrl } = this.state
+
+        if(!rate || !description || !selectedCateogory || !picUrl){
+            this.setState({error : true , isLoading : false})
+            return
+        }
+        this.setState({error : false})
         if(!picUrl.startsWith('http')){
             await makeBlobFromURI(picUrl).then((blob)=>{
             picUrl = blob
@@ -90,11 +88,12 @@ class SubmitSkills extends Component {
             picUrl
         }
         const success = await saveUserSkill(userSkillObj)
-        console.log(success , "success");
+        this.setState({isLoading : false})
+        this.props.navigation.push("Dashboard")
         
     }
     render() {
-        const { showSideBar, selectedCateogory, cateogriesList, list, picUrl } = this.state
+        const { selectedCateogory, cateogriesList, list, picUrl, isLoading, error } = this.state
         return (
             <View>
             <CustomHeader title={'Submit Skill'} />
@@ -144,6 +143,8 @@ class SubmitSkills extends Component {
                     style={[styles.submitBtn , styles.submitBtnText]}
                     onPress = {()=>{this.submitSkill()}}
                 />
+                {isLoading && <Spinner color='blue' style={{marginTop : 25}} />}
+                {error && <Text style={{color : 'red' , fontSize : 20 , marginBottom : 30}}>All Fields Are Required</Text>}
             </View>
             </ScrollView>
             </View>

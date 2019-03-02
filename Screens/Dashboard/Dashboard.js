@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux'
 
-import { StyleSheet, ScrollView, View, Modal } from 'react-native';
+import { StyleSheet, ScrollView, View, Modal, Image } from 'react-native';
 import { Content, List, ListItem, Left, Body, Right, Thumbnail, Text, Spinner, Card, CardItem } from 'native-base';
 import CustomButton from '../../Components/CustomButton/CustomButton'
 import { firebase } from '../../Config/Firebase/Firebase'
@@ -92,6 +92,12 @@ class Dashboard extends React.Component {
                                 <ScrollView vertical={true}>
                                     <View style={{ marginTop: 40, marginLeft: 15 }}>
                                         <Text style={{fontSize : 30 , textAlign : 'center'}}>Details</Text>
+                                        <View style={{alignItems : 'center'}}>
+                                            <Image 
+                                                source = {{uri : skillsArr[index].picUrl}}
+                                                style={{width : 150 , height : 150 , marginTop : 30 , marginBottom : 30}}
+                                            />
+                                        </View>
                                         <Card>
                                             <CardItem header bordered>
                                                 <Text>Skill</Text>
@@ -203,9 +209,9 @@ const styles = StyleSheet.create({
         fontSize: 13
     },
     modalBackBtn: {
-        borderColor: '#0984e3',
+        borderColor: '#d63031',
         borderWidth: 2,
-        backgroundColor: '#0984e3',
+        backgroundColor: '#d63031',
         padding: 5,
         borderRadius: 20,
         marginTop: 30,
@@ -231,9 +237,9 @@ const styles = StyleSheet.create({
         fontSize: 16
     },
     proposalBtn: {
-        borderColor: '#0984e3',
+        borderColor: '#4cd137',
         borderWidth: 2,
-        backgroundColor: '#0984e3',
+        backgroundColor: '#4cd137',
         padding: 5,
         borderRadius: 10,
         marginLeft: 20,

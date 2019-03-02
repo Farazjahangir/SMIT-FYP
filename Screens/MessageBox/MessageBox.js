@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { View, ScrollView, StyleSheet } from 'react-native'
-import { Item, Input, List, ListItem, Left, Body, Right, Thumbnail, Text } from 'native-base';
+import { Item, Input, List, ListItem, Body, Text, Spinner } from 'native-base';
 import CustomeButton from '../../Components/CustomButton/CustomButton'
 import CustomeHeader from '../../Components/CustomHeader/CustomHeader'
 
@@ -13,7 +13,8 @@ class MessageBox extends Component {
       roomId : '',
       message: '',
       messageArr : [],
-      userObj : ''
+      userObj : '',
+      isLoading : true
     }
   }
 
@@ -43,7 +44,7 @@ class MessageBox extends Component {
           .add({ userObject , userInfo })
           .then(doc => {
             roomId = doc.id;
-            this.setState({roomId : roomId})
+            this.setState({roomId : roomId , isLoading : false})
             return false;
           });
       }
@@ -61,7 +62,7 @@ class MessageBox extends Component {
             querySnapshot.docChanges().forEach(value => {
               var senderId  = value.doc.data().senderUid;
               messageArr.push(value.doc.data())
-              this.setState({messageArr , senderId})
+              this.setState({messageArr , senderId , isLoading : false})
               
             });
           });
@@ -93,7 +94,7 @@ class MessageBox extends Component {
 }
 
   render() {
-     const { messageArr } = this.state
+     const { messageArr, isLoading } = this.state
     const { userUid } = this.props.userObj
     console.log('message' , this.props);
     
@@ -101,10 +102,11 @@ class MessageBox extends Component {
     return (
       <View style={{flex : 1}}>
         <CustomeHeader title={'Message Box'} />
+        {isLoading && <Spinner color ='blue' style={{marginTop : 20}} />}
         <View style={{flex :1}}>
           <ScrollView>
-              {messageArr.map((val)=>{
-                return <List>
+              {messageArr.map((val , i)=>{
+                return <List key = {i}>
                 <ListItem avatar>
                   {val.senderUid === userUid
                     ?
